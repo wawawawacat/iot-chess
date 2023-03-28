@@ -48,6 +48,11 @@ let blackCasualities;
 let whiteVictories;
 let blackVictories;
 
+//my stuff
+let lastX;
+let lastY;
+let startBlack = false;
+
 document.addEventListener("DOMContentLoaded", onLoad);
 
 function onLoad() {
@@ -73,7 +78,8 @@ function startGame() {
     curY = -1;
 
     currentTeam = WHITE;
-    currentTeamText.textContent = "White's turn";
+    turn.textContent = "W";
+    currentTeamText.textContent = "No Moves Yet";
 
     whiteCasualities = [0, 0, 0, 0, 0];
     blackCasualities = [0, 0, 0, 0, 0];
@@ -87,9 +93,61 @@ function startGame() {
 function onClick(event) {
     let chessCanvasX = chessCanvas.getBoundingClientRect().left;
     let chessCanvasY = chessCanvas.getBoundingClientRect().top;
+    let x = 0;
+    let y = 0;
+    
 
-    let x = Math.floor((event.clientX-chessCanvasX)/TILE_SIZE);
-    let y = Math.floor((event.clientY-chessCanvasY)/TILE_SIZE);
+    if (currentTeam == WHITE){
+        turn.textContent = "W";
+
+        x = Math.floor((event.clientX-chessCanvasX)/TILE_SIZE);
+        y = Math.floor((event.clientY-chessCanvasY)/TILE_SIZE);
+
+        let cur = curX + "," + curY;
+        let select = x.toString() + "," + y.toString();
+        
+        currentTeamText.textContent = cur + ";" + select;
+
+        /*--------------------------------------------
+
+        IMP SIDE:
+
+        CONSTANTLY SCAN FIRST LINE IN BODY, IGNORE W
+
+        WHEN B, REALIZE IT IS IMP TURN
+
+        READ NEXT LINE FOR WHITE MOVES, THEN UPDATE
+
+        ---------------------------------------------*/
+
+
+    }
+    if (currentTeam == BLACK){
+        turn.textContent = "B";
+
+
+        /*DECIPHER IMP INPUT ----------------------
+
+
+        DO THIS EITHER BY HTML OR TEXT FILE
+
+
+        ------------------------------------------*/
+        let x1 = 1;
+        let y1 = 0;
+        let x2 = 2;
+        let y2 = 2;
+
+        if (startBlack == false){
+            x = x1;
+            y = y1;
+            startBlack = true;
+        } else {
+            x = x2;
+            y = y2;
+        }
+
+    }
 
     if (checkValidMovement(x, y) === true) {
         if (checkValidCapture(x, y) === true) {
@@ -307,8 +365,9 @@ function moveSelectedPiece(x, y) {
 
 function changeCurrentTeam() {
     if (currentTeam === WHITE) {
-        currentTeamText.textContent = "Black's turn";
+        //currentTeamText.textContent = "Black's turn";
         currentTeam = BLACK;
+        startBlack = false;
     } else {
         currentTeamText.textContent = "White's turn";
         currentTeam = WHITE;
@@ -518,3 +577,5 @@ class Tile {
         this.team = team;
     }
 }
+
+//source: https://www.sourcecodester.com/download-code?nid=15036&title=Chess%28Multiplayer%29+Game+using+JavaScript+with+Free+Source+Code
